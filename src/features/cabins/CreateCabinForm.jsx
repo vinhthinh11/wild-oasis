@@ -1,13 +1,12 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
 import Input from '../../ui/Input';
 import Form from '../../ui/Form';
 import Button from '../../ui/Button';
 import FileInput from '../../ui/FileInput';
 import Textarea from '../../ui/Textarea';
 import { useForm } from 'react-hook-form';
-import { addEditCabin } from '../../services/apiCabins';
 import FormRow from '../../ui/FormRow';
+import useCreateCabin from './useCreateCabin';
+import useUpdateCabin from './useUpdateCabin';
 
 function CreateCabinForm({ cabinToEdit = {}, closeForm }) {
   const { id: editId, ...editValue } = cabinToEdit;
@@ -20,43 +19,36 @@ function CreateCabinForm({ cabinToEdit = {}, closeForm }) {
     isLoading: isAdding,
   } = useForm({ defaultValues: isEditSession ? cabinToEdit : undefined });
   const { errors } = formState;
-  const queryClient = useQueryClient();
-  const { mutate: addNewCabin } = useMutation({
-    mutationFn: addEditCabin,
-    onSuccess: () => {
-      toast.success('Successfully add new cabin');
-      queryClient.invalidateQueries({ queryKey: ['cabins'] });
-      reset();
-    },
-    onError: err => {
-      toast.error(err.message);
-    },
-  });
-  const { mutate: updateCabin } = useMutation({
-    mutationFn: ({ newCabin, id }) => addEditCabin(newCabin, id),
-    onSuccess: () => {
-      toast.success('Successfully update cabin');
-      queryClient.invalidateQueries({ queryKey: ['cabins'] });
-      reset();
-    },
-    onError: err => {
-      toast.error(err.message);
-    },
-  });
+  const { addNewCabin } = useCreateCabin();
+  const { updateCabin } = useUpdateCabin();
+
   function onSubmit(data) {
     // console.log(data);
     const image = typeof data.image === 'string' ? data.image : data.image[0];
     if (isEditSession)
-      updateCabin({ newCabin: { ...data, image }, id: editId });
-    else addNewCabin({ ...data, image });
+      updateCabin(
+        { newCabin: { ...data, image }, id: editId },
+        {
+          onSuccess: () => {
+            reset();
+          },
+        }
+      );
+    else {
+      addNewCabin(
+        { ...data, image },
+        {
+          onSuccess: () => {
+            reset();
+          },
+        }
+      );
+    }
     closeForm(value => !value);
   }
-  // function onError(err) {
-  //   console.log('Function chua trien khai', err);
-  // }
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
-      <FormRow lable="Cabin name" error={errors?.name?.message}>
+      <FormRow label="Cabin name" error={errors?.name?.message}>
         <Input
           type="text"
           id="name"
@@ -65,7 +57,7 @@ function CreateCabinForm({ cabinToEdit = {}, closeForm }) {
         />
       </FormRow>
 
-      <FormRow lable="Maximum capacity" error={errors?.maxCapacity?.message}>
+      <FormRow label="Maximum capacity" error={errors?.maxCapacity?.message}>
         <Input
           type="number"
           id="maxCapacity"
@@ -74,7 +66,7 @@ function CreateCabinForm({ cabinToEdit = {}, closeForm }) {
         />
       </FormRow>
 
-      <FormRow lable="Regular price" error={errors?.regularPrice?.message}>
+      <FormRow label="Regular price" error={errors?.regularPrice?.message}>
         <Input
           type="number"
           id="regularPrice"
@@ -83,7 +75,7 @@ function CreateCabinForm({ cabinToEdit = {}, closeForm }) {
         />
       </FormRow>
 
-      <FormRow lable="Discount" error={errors?.discount?.message}>
+      <FormRow label="Discount" error={errors?.discount?.message}>
         <Input
           type="number"
           id="discount"
@@ -97,7 +89,7 @@ function CreateCabinForm({ cabinToEdit = {}, closeForm }) {
         />
       </FormRow>
 
-      <FormRow lable="Description" error={errors?.discription?.message}>
+      <FormRow label="Description" error={errors?.discription?.message}>
         <Textarea
           type="number"
           id="discription"
@@ -106,7 +98,7 @@ function CreateCabinForm({ cabinToEdit = {}, closeForm }) {
         />
       </FormRow>
       {/* khi dang edit thi this field is not required */}
-      <FormRow lable="Cabin photo">
+      <FormRow label="Cabin photo">
         <FileInput
           id="image"
           accept="image/*"

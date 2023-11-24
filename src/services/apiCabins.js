@@ -16,13 +16,7 @@ export async function deleteCabins(id) {
   return data;
 }
 export async function addEditCabin(newCabin, id) {
-  // remove the '/' in the picture name
-  // check if the new cabin have the image name
-  // old picture that exit on the system will start with https://tfzmcbhkzzjolonywkpu.supabase.co
-  console.log(newCabin);
-  console.log(id);
-  let hasImagePath = false;
-  if (id) hasImagePath = newCabin.image.startsWith?.(supabaseUrl);
+  const hasImagePath = newCabin.image?.startsWith?.(supabaseUrl);
   const imageName = `${Math.random()}-${newCabin.image.name}`.replaceAll(
     '/',
     ''
@@ -30,7 +24,6 @@ export async function addEditCabin(newCabin, id) {
   const imagePath = hasImagePath
     ? newCabin.image
     : `${supabaseUrl}/storage/v1/object/public/cabin-images/${imageName}`;
-  console.log(imageName, imagePath, hasImagePath);
   let query = supabase.from('cabins');
   // This for create new cabin
   if (!id) query = query.insert([{ ...newCabin, image: imagePath }]);
@@ -45,7 +38,7 @@ export async function addEditCabin(newCabin, id) {
     );
   }
   // upload image to supabase bucket
-  if (hasImagePath) return;
+  if (hasImagePath) return data;
   const { error: storageError } = await supabase.storage
     .from('cabin-images')
     .upload(imageName, newCabin.image);
