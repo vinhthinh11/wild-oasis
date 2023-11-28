@@ -8,8 +8,8 @@ import FormRow from '../../ui/FormRow';
 import useCreateCabin from './useCreateCabin';
 import useUpdateCabin from './useUpdateCabin';
 
-function CreateCabinForm({ cabinToEdit = {}, closeForm }) {
-  const { id: editId, ...editValue } = cabinToEdit;
+function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
+  const { id: editId } = cabinToEdit;
   const isEditSession = Boolean(editId);
   const {
     register,
@@ -31,6 +31,7 @@ function CreateCabinForm({ cabinToEdit = {}, closeForm }) {
         {
           onSuccess: () => {
             reset();
+            onCloseModal?.();
           },
         }
       );
@@ -40,14 +41,17 @@ function CreateCabinForm({ cabinToEdit = {}, closeForm }) {
         {
           onSuccess: () => {
             reset();
+            onCloseModal?.();
           },
         }
       );
     }
-    closeForm(value => !value);
   }
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
+    <Form
+      onSubmit={handleSubmit(onSubmit)}
+      type={onCloseModal ? 'modal' : 'regular'}
+    >
       <FormRow label="Cabin name" error={errors?.name?.message}>
         <Input
           type="text"
@@ -110,7 +114,12 @@ function CreateCabinForm({ cabinToEdit = {}, closeForm }) {
 
       <FormRow>
         {/* type is an HTML attribute! */}
-        <Button disabled={isAdding} variation="secondary" type="reset">
+        <Button
+          onClick={() => onCloseModal?.()}
+          disabled={isAdding}
+          $variation="secondary"
+          type="reset"
+        >
           Cancel
         </Button>
         <Button disabled={isAdding}>
