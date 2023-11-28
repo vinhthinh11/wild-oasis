@@ -12,6 +12,11 @@ import { useMoveBack } from '../../hooks/useMoveBack';
 import { useBooking } from './useBooking';
 import Spinner from '../../ui/Spinner';
 import { useNavigate } from 'react-router-dom';
+import { HiArrowUpOnSquare, HiTrash } from 'react-icons/hi2';
+import { useCheckout } from '../check-in-out/useCheckout';
+import Modal from '../../ui/Modal';
+import ConfirmDelete from '../../ui/ConfirmDelete';
+import useDeleteBooking from './useDeleteBooking';
 
 const HeadingGroup = styled.div`
   display: flex;
@@ -21,10 +26,12 @@ const HeadingGroup = styled.div`
 
 function BookingDetail() {
   const { booking, isLoading } = useBooking();
+  const { checkout, isCheckingOut } = useCheckout();
   const navigate = useNavigate();
+  const moveBack = useMoveBack();
+  const { deleteBooking } = useDeleteBooking();
   const { status, id } = booking || {};
 
-  const moveBack = useMoveBack();
   if (isLoading) return <Spinner />;
 
   const statusToTagName = {
@@ -44,11 +51,38 @@ function BookingDetail() {
       </Row>
 
       <BookingDataBox booking={booking} />
-      {status === 'unconfirmed' && (
+
+      <Modal>
         <ButtonGroup>
-          <Button onClick={() => navigate(`/checkin/${id}`)}>Check in</Button>
+          {status === 'unconfirmed' && (
+            <Button onClick={() => navigate(`/checkin/${id}`)}>Check in</Button>
+          )}
+
+          {status === 'checked-in' && (
+            <Button
+              onClick={() => {
+                checkout(id);
+              }}
+            >
+              <HiArrowUpOnSquare /> Check out
+            </Button>
+          )}
+          <Modal.Open opens="delete">
+            <Button $variation="danger">
+              <HiTrash /> Delete
+            </Button>
+          </Modal.Open>
+          <Modal.Window name="delete">
+            <ConfirmDelete
+              resourceName="booking"
+              onConfirm={() =>
+                deleteBooking(id, { onSuccess: () => navigate(-1) })
+              }
+              disabled={false}
+            />
+          </Modal.Window>
         </ButtonGroup>
-      )}
+      </Modal>
     </>
   );
 }

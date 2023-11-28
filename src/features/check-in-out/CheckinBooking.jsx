@@ -25,11 +25,19 @@ const Box = styled.div`
 `;
 
 function CheckinBooking() {
-  const [confirmPaid, setConfirmPaid] = useState(false);
-  const [addBreakfast, setAddBreakfast] = useState(false);
   const { booking, isLoading } = useBooking();
   const { checkin, isCheckingIn } = useCheckin();
   const { settings, isLoading: isLoadingSetting } = useSettings();
+  const [confirmPaid, setConfirmPaid] = useState(false);
+  const {
+    id: bookingId,
+    guests,
+    totalPrice,
+    numGuests,
+    hasBreakfast,
+    numNights,
+  } = booking || {};
+  const [addBreakfast, setAddBreakfast] = useState(hasBreakfast || false);
   // calculate the breakfast optional price
   useEffect(() => {
     setConfirmPaid(booking?.isPaid ?? false);
@@ -39,14 +47,6 @@ function CheckinBooking() {
 
   if (isLoading || isLoadingSetting) return <Spinner />;
 
-  const {
-    id: bookingId,
-    guests,
-    totalPrice,
-    numGuests,
-    hasBreakfast,
-    numNights,
-  } = booking;
   const optionalPrice = settings.breakfastPrice * numNights * numGuests;
 
   function handleCheckin() {
@@ -72,7 +72,7 @@ function CheckinBooking() {
 
       <BookingDataBox booking={booking} />
 
-      {!addBreakfast && (
+      {!hasBreakfast && (
         <Box>
           <Checkbox
             checked={addBreakfast}
