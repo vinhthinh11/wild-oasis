@@ -76,9 +76,9 @@ function MainNav() {
           </StyleNavLink>
         </li>
         <li>
-          <StyleNavLink to="/account">
+          <StyleNavLink to="/users">
             <HiOutlineUser />
-            <span>Account</span>
+            <span>Users</span>
           </StyleNavLink>
         </li>{' '}
         <li>
