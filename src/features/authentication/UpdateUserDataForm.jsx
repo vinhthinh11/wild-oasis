@@ -17,17 +17,16 @@ function UpdateUserDataForm() {
       user_metadata: { fullName: currentFullName },
     },
   } = useUser();
-  const { updateUser, isUpdating } = useUpdateUser();
-
-  const [fullName, setFullName] = useState(currentFullName);
+  const [fullName, setFullName] = useState(currentFullName || '');
   const [avatar, setAvatar] = useState(null);
+  const { updateUser, isUpdating } = useUpdateUser();
 
   function handleSubmit(e) {
     // first let check if the user can update fullname and avatar
     e.preventDefault();
     // check if ther user update fullname
     const isUpdateFullName = fullName === currentFullName;
-    if (isUpdateFullName || !avatar) return;
+    if (isUpdateFullName) return;
     updateUser({ fullName: fullName, avatar });
   }
   function handleCancelButton() {

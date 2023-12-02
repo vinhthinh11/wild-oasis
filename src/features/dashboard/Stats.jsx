@@ -11,7 +11,7 @@ import Spinner from '../../ui/Spinner';
 
 function Stats({ bookings, confirmStays }) {
   const [searchParams] = useSearchParams();
-  const daysWithin = searchParams.get('last') || 1;
+  const daysWithin = searchParams.get('last') || 7;
   const { cabins, isLoading } = useCabin();
   const numBookings = bookings.length;
   // const numStays = confirmStays.length;
@@ -21,7 +21,6 @@ function Stats({ bookings, confirmStays }) {
   const occupancyRate =
     confirmStays?.reduce((acc, stay) => acc + stay.numNights, 0) /
     (cabins?.length * daysWithin);
-  console.log(occupancyRate);
   if (isLoading) return <Spinner />;
 
   return (
@@ -48,7 +47,9 @@ function Stats({ bookings, confirmStays }) {
         title="Occupancy"
         color="yellow"
         icon={<HiOutlineChartBar />}
-        value={Math.round(occupancyRate * 100) + '%'}
+        value={
+          Math.round((occupancyRate > 1 ? 0.9 : occupancyRate) * 100) + '%'
+        }
       />
     </>
   );

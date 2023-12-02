@@ -5,7 +5,6 @@ import { useRecentStays } from './useRecentStays';
 import Spinner from '../../ui/Spinner';
 import SalesChart from './SalesChart';
 import DurationChart from './DurationChart';
-import Today from '../check-in-out/TodayActivity';
 import TodayActivity from '../check-in-out/TodayActivity';
 
 const StyledDashboardLayout = styled.div`
@@ -16,7 +15,7 @@ const StyledDashboardLayout = styled.div`
 `;
 function DashboardLayout() {
   const { isLoading, bookings } = useRecentBooking();
-  const { isLoading: isLoadingStay, stays, confirmStays } = useRecentStays();
+  const { isLoading: isLoadingStay, confirmStays } = useRecentStays();
   if (isLoading || isLoadingStay) return <Spinner />;
   return (
     <StyledDashboardLayout>

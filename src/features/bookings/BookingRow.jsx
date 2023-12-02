@@ -66,8 +66,8 @@ function BookingRow({
     'checked-out': 'silver',
   };
   const navigate = useNavigate();
-  const { checkout, isCheckingOut } = useCheckout();
-  const { deleteBooking, isDeleting } = useDeleteBooking();
+  const { checkout } = useCheckout();
+  const { deleteBooking } = useDeleteBooking();
 
   return (
     <Table.Row>

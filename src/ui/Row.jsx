@@ -14,6 +14,12 @@ const Row = styled.div`
       flex-direction: column;
       gap: 1.6rem;
     `}
+  ${props =>
+    props.type === 'center' &&
+    css`
+      justify-content: center;
+      align-items: center;
+    `}
 `;
 Row.defaultProps = {
   type: 'vertical',

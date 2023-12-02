@@ -9,6 +9,7 @@ import {
   Tooltip,
 } from 'recharts';
 import { useDarkMode } from '../../context/DarkModeContext';
+import Row from '../../ui/Row';
 
 const ChartBox = styled.div`
   /* Box */
@@ -146,7 +147,9 @@ function DurationChart({ confirmedStays }) {
   const data = prepareData(startData, confirmedStays);
   return (
     <ChartBox>
-      <Heading $as="h2">Stay duration sumary</Heading>
+      <Row type="center">
+        <Heading $as="h2">Stay duration sumary</Heading>
+      </Row>
       <ResponsiveContainer width="100%" height={240}>
         <PieChart>
           <Pie

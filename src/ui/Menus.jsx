@@ -83,6 +83,7 @@ function Toggle({ id }) {
   function handleClick(e) {
     // if is openId == id -->close
     // if is openId=="" == -->open
+    e.stopPropagation();
     const position = e.target.closest('button').getBoundingClientRect();
     setPosition({
       x: window.innerWidth - position.width - position.x,
@@ -100,7 +101,7 @@ function Toggle({ id }) {
 function List({ id, children }) {
   // compare to open
   const { openId, position, close } = useContext(MenuContext);
-  const ref = useCloseModal(close);
+  const ref = useCloseModal(close, false);
   if (openId !== id) return null;
   return createPortal(
     <StyledList $position={position} ref={ref}>

@@ -6,7 +6,7 @@ import { PAGE_SIZE } from '../../utils/constants';
 // this function is use to fetch the all the cabin
 
 export function useBookings() {
-  const [searchParams, sestSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const queryClient = useQueryClient();
   // filter value
   const filterValue = searchParams.get('status');

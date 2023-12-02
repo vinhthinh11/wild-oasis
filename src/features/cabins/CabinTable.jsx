@@ -12,7 +12,6 @@ function CabinTable() {
   const [searchParams] = useSearchParams();
   if (isLoading) return <Spinner />;
   if (!cabins) return <Empty resource="Cabins" />;
-  // console.log(cabins);
 
   // check if the data is loading, display the spinner
   // this to filter cabins

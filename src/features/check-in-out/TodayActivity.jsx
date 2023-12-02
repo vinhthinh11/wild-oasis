@@ -5,6 +5,7 @@ import Row from '../../ui/Row';
 import { useTodayActivity } from './useTodayActivity';
 import Spinner from '../../ui/Spinner';
 import TodayItem from './TodayItem';
+import { format } from 'date-fns';
 
 const StyledToday = styled.div`
   /* Box */
@@ -43,8 +44,10 @@ function TodayActivity() {
   const { isLoading, activities } = useTodayActivity();
   return (
     <StyledToday>
-      <Row type="horizontal">
-        <Heading $as="h2">Today</Heading>
+      <Row type="center">
+        <Heading $as="h2">
+          Activities in {format(new Date(), 'dd MMMM yyyy')}
+        </Heading>
       </Row>
       {isLoading ? (
         <Spinner />

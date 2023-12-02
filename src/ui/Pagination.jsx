@@ -20,11 +20,6 @@ const P = styled.p`
   }
 `;
 
-const Buttons = styled.div`
-  display: flex;
-  gap: 0.6rem;
-`;
-
 const PaginationButton = styled.button`
   background-color: ${props =>
     props.active ? ' var(--color-brand-600)' : 'var(--color-grey-50)'};

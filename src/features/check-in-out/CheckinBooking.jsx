@@ -31,7 +31,6 @@ function CheckinBooking() {
   const [confirmPaid, setConfirmPaid] = useState(false);
   const {
     id: bookingId,
-    guests,
     totalPrice,
     numGuests,
     hasBreakfast,

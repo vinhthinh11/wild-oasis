@@ -6,7 +6,7 @@ import Spinner from '../../ui/Spinner';
 import useUpdateSetting from './useUpdateSetting';
 
 function UpdateSettingsForm() {
-  const { settings, error } = useSettings();
+  const { settings } = useSettings();
   const { updateSetting, isUpdating } = useUpdateSetting();
   function handleUpdateSetting(e, updateField) {
     if (!e.target.value) return;
